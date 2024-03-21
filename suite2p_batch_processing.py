@@ -12,11 +12,9 @@ This Script can be used to do registration of calcium imaging recordings (tiff f
 in the suite2p package. It will ask you to select a directory that includes only your tiff files. After that it will
 automatically start the registration. If the recording file could be found it will ask you if you would like to do a
 rigid or non-rigid registration.
+
 If you want you can change the batch size by calling:
     >> python suite2p_pre_processing.py -500
-
-Note:
-    The file name must include "recording", otherwise it will be ignored!
 
 Default settings:
     batch size of 300 frames
@@ -61,8 +59,9 @@ def suite2p_registering(rec_path, file_name, non_rigid=True, f_batch_size=300):
     # metadata_df.to_csv(f'{rec_path}/metadata.csv', index=False)
 
     ops = suite2p.default_ops()  # populates ops with the default options
-    ops['tau'] = 1.25
-    ops['fs'] = 2
+    ops['tau'] = 1.25  # not important for registration
+    ops['fs'] = 2  # not important for registration
+
     ops['nimg_init'] = 300  # (int, default: 200) how many frames to use to compute reference image for registration
     ops['batch_size'] = f_batch_size  # (int, default: 200) how many frames to register simultaneously in each batch.
     # Depends on memory constraints - it will be faster to run if the batch is larger, but it will require more RAM.
@@ -145,7 +144,13 @@ if __name__ == '__main__':
         tiff_files = [s for s in file_list if (s.endswith('.tif') or s.endswith('.tiff'))]
         print('WILL IMPORT SUITE2P PACKAGE ... THIS MAY TAKE A FEW SECONDS ...')
         print('')
-        import suite2p
+        try:
+            import suite2p
+        except ModuleNotFoundError:
+            print('++++ ERROR ++++')
+            print('COULD NOT FIND suite2p PACKAGE!')
+            exit()
+
         for f_name in tiff_files:
             print('')
             print(f'-- START {f_name} --')
