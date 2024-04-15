@@ -141,9 +141,17 @@ if __name__ == '__main__':
     if rec_dir:
         # Get all Files in directory
         file_list = os.listdir(rec_dir)
-        tiff_files = [s for s in file_list if (s.endswith('.tif') or s.endswith('.tiff'))]
+        tiff_files = [s for s in file_list if (s.endswith('.tif') or s.endswith('.tiff') or s.endswith('.TIF') or s.endswith('.TIFF'))]
+        print('')
+        print('FOUND THE FOLLOWING FILES:')
+        for i in tiff_files:
+            print(i)
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print('')
+
         print('WILL IMPORT SUITE2P PACKAGE ... THIS MAY TAKE A FEW SECONDS ...')
         print('')
+
         try:
             import suite2p
         except ModuleNotFoundError:
@@ -153,6 +161,8 @@ if __name__ == '__main__':
 
         for f_name in tiff_files:
             print('')
+            print('====================================================')
+            print('====================================================')
             print(f'-- START {f_name} --')
             print('')
             suite2p_registering(rec_path=f'{rec_dir}/', file_name=f_name, f_batch_size=batch_size, non_rigid=non_rigid_reg)
